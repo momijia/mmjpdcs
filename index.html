@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼豆订单信息收集</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .note {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .row input {
+            flex: 1;
+            width: 100px;
+        }
+        /* 第二页容器样式 */
+        #page2.container {
+            max-height: 80vh; /* 限制最大高度为视口的 80% */
+            overflow-y: auto; /* 内容超出时显示滚动条 */
+            padding: 20px;
+        }
+        /* 数据行容器样式 */
+        #dataRows {
+            max-height: 60vh; /* 限制最大高度 */
+            overflow-y: auto; /* 内容超出时显示滚动条 */
+            margin-bottom: 20px;
+        }
+    </style>
+    <!-- 引入 ExcelJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+    <!-- 第一页：输入订单号和总份数 -->
+    <div id="page1" class="container">
+        <h1>拼豆订单信息收集</h1>
+        <label for="orderNumber">订单号：</label>
+        <input type="text" id="orderNumber" placeholder="请输入订单号">
+        
+        <label for="totalQuantity">总份数：</label>
+        <input type="number" id="totalQuantity" placeholder="请输入总份数" min="1">
+        <p class="note">注：1000粒为一份。例如：1000粒×10份 + 2000粒×3份 = 16份。</p>
+        <button onclick="goToPage2()">确认</button>
+    </div>
+
+    <!-- 第二页：填写订单信息 -->
+    <div id="page2" class="container" style="display: none;">
+        <h1>填写订单信息</h1>
+        <p>请输入您需要的色号及数量</p>
+        <p>订单号：<span id="orderNumberDisplay"></span></p>
+        <div id="dataRows"></div>
+        <button onclick="submitOrder()">提交订单</button>
+    </div>
+
+    <script>
+        // 定义色号转换表
+        const colorMap = {
+            "1": "H2", "2": "A2", "3": "A4", "4": "A7", "5": "F5", "6": "E4", "7": "D7", "8": "D3", "9": "C7", "10": "B8",
+            // 其他色号映射...
+        };
+
+        // 创建反向映射表
+        const reverseColorMap = {};
+        for (const [key, value] of Object.entries(colorMap)) {
+            reverseColorMap[value] = key;
+        }
+
+        let orderNumber = '';
+        let totalQuantity = 0;
+
+        // 切换页面
+        function goToPage2() {
+            // 获取输入值
+            orderNumber = document.getElementById('orderNumber').value;
+            totalQuantity = parseInt(document.getElementById('totalQuantity').value);
+
+            // 输入验证
+            if (!orderNumber || !totalQuantity || totalQuantity <= 0) {
+                alert('请输入有效的订单号和总份数！');
+                return;
+            }
+
+            // 显示订单号
+            document.getElementById('orderNumberDisplay').textContent = orderNumber;
+
+            // 动态生成数据填写行
+            const dataRows = document.getElementById('dataRows');
+            dataRows.innerHTML = '';
+            for (let i = 1; i <= totalQuantity; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.innerHTML = `
+                    <input type="text" class="maomi" placeholder="猫咪家色号" oninput="syncColor(this, true)">
+                    <input type="text" class="mard" placeholder="Mard 色号" oninput="syncColor(this, false)">
+                    <input type="number" class="quantity" placeholder="数量" min="0">
+                `;
+                dataRows.appendChild(row);
+            }
+
+            // 显示第二页
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'block';
+        }
+
+        // 同步色号（双向）
+        function syncColor(input, isMaomi) {
+            const value = input.value;
+            const row = input.parentElement;
+            const maomiInput = row.querySelector('.maomi');
+            const mardInput = row.querySelector('.mard');
+
+            if (isMaomi) {
+                // 填写猫咪家色号，自动填充 Mard 色号
+                mardInput.value = colorMap[value] || '';
+            } else {
+                // 填写 Mard 色号，自动填充猫咪家色号
+                maomiInput.value = reverseColorMap[value] || '';
+            }
+        }
+
+        // 提交订单
+        function submitOrder() {
+            const confirmSubmit = confirm('确认提交？');
+            if (!confirmSubmit) return;
+
+            const rows = document.querySelectorAll('.row');
+            const orderData = [];
+            let totalFilledQuantity = 0;
+            const colorCountMap = {}; // 用于记录每个色号出现的次数
+
+            rows.forEach(row => {
+                const maomi = row.querySelector('.maomi').value;
+                const mard = row.querySelector('.mard').value;
+                const quantity = parseInt(row.querySelector('.quantity').value) || 0;
+
+                if (maomi && mard && quantity > 0) {
+                    orderData.push({
+                        猫咪家色号: maomi,
+                        Mard色号: mard,
+                        数量: quantity
+                    });
+                    totalFilledQuantity += quantity;
+
+                    // 记录色号出现的次数
+                    if (colorCountMap[maomi]) {
+                        colorCountMap[maomi]++;
+                    } else {
+                        colorCountMap[maomi] = 1;
+                    }
+                }
+            });
+
+            if (orderData.length === 0) {
+                alert('请填写至少一行数据！');
+                return;
+            }
+
+            // 检查总份数是否一致
+            if (totalFilledQuantity !== totalQuantity) {
+                alert(`宝宝，第一页填写的下单总份数是 ${totalQuantity}，但填写的是 ${totalFilledQuantity} 哦，请重新检查后再提交。`);
+                return;
+            }
+
+            // 检查是否有重复填写的色号
+            const duplicateColors = Object.keys(colorCountMap).filter(color => colorCountMap[color] > 1);
+            if (duplicateColors.length > 0) {
+                alert(`宝宝，${duplicateColors.join(', ')} 色号重复填写了多行，请修改一下。`);
+                return;
+            }
+
+            // 按猫咪家色号升序排序
+            orderData.sort((a, b) => a.猫咪家色号 - b.猫咪家色号);
+
+            // 生成 Excel 文件
+            generateExcel(orderData);
+        }
+
+        // 生成 Excel 文件
+        function generateExcel(data) {
+            const workbook = new ExcelJS.Workbook();
+
+            // Sheet1：原始数据
+            const sheet1 = workbook.addWorksheet('订单数据');
+            sheet1.columns = [
+                { header: '猫咪家色号', key: 'maomi', width: 15 },
+                { header: 'Mard 色号', key: 'mard', width: 15 },
+                { header: '数量', key: 'quantity', width: 15 }
+            ];
+            data.forEach(item => {
+                sheet1.addRow({
+                    maomi: parseInt(item.猫咪家色号), // 转换为 int 型
+                    mard: item.Mard色号,
+                    quantity: parseInt(item.数量) // 转换为 int 型
+                });
+            });
+
+            // Sheet2：处理后的数据
+            const sheet2 = workbook.addWorksheet('处理后数据');
+            const processedData = [];
+
+            data.forEach(item => {
+                const maomi = item.猫咪家色号;
+                const mard = item.Mard色号;
+                const quantity = parseInt(item.数量);
+
+                // 处理逻辑
+                if (['1', '14', '15'].includes(maomi)) {
+                    if (quantity >= 2) {
+                        processedData.push({ 猫咪家色号: `${maomi}*${quantity}`, Mard色号: mard });
+                    } else {
+                        processedData.push({ 猫咪家色号: parseInt(maomi), Mard色号: mard });
+                    }
+                } else {
+                    if (quantity === 2) {
+                        processedData.push({ 猫咪家色号: parseInt(maomi), Mard色号: mard });
+                        processedData.push({ 猫咪家色号: parseInt(maomi), Mard色号: mard });
+                    } else if (quantity >= 3) {
+                        processedData.push({ 猫咪家色号: `${maomi}*${quantity}`, Mard色号: mard });
+                    } else {
+                        processedData.push({ 猫咪家色号: parseInt(maomi), Mard色号: mard });
+                    }
+                }
+            });
+
+            // 按猫咪家色号升序排序
+            processedData.sort((a, b) => {
+                const aValue = typeof a.猫咪家色号 === 'string' ? parseInt(a.猫咪家色号.split('*')[0]) : a.猫咪家色号;
+                const bValue = typeof b.猫咪家色号 === 'string' ? parseInt(b.猫咪家色号.split('*')[0]) : b.猫咪家色号;
+                return aValue - bValue;
+            });
+
+            // 将处理后的数据写入 Sheet2
+            processedData.forEach(item => {
+                sheet2.addRow([item.猫咪家色号, item.Mard色号]);
+            });
+
+            // 生成文件名
+            const fileName = `总数量：${totalQuantity}_订单号：${orderNumber}.xlsx`;
+
+            // 保存文件
+            workbook.xlsx.writeBuffer().then(buffer => {
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                saveAs(blob, fileName);
+            });
+        }
+    </script>
+</body>
+</html>
