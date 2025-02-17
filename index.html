@@ -188,9 +188,10 @@
     </style>
 </head>
 <body>
-    <!-- 第一页：输入订单号和份数 -->
+    <!-- 第一页：输入份数 -->
     <div id="page1" class="container">
         <h1>猫咪家拼豆订单信息收集</h1>
+   
         
         <label for="quantity1000">1000粒份数：</label>
         <input type="number" id="quantity1000" placeholder="请输入1000粒份数" min="0">
@@ -311,7 +312,7 @@
         }
 
         // 缺色的色号列表（包括猫咪家色号和 Mard 色号）
-        const outOfStockColors = ["51", "75",  "T1", "C3"];
+        const outOfStockColors = ["51", "75","T1", "C3"];
 
         let orderNumber = '';
         let quantity1000 = 0;
@@ -321,34 +322,35 @@
 
         // 切换页面
         function goToPage2() {
-            // 获取输入值
-            orderNumber = document.getElementById('orderNumber').value;
-            quantity1000 = parseInt(document.getElementById('quantity1000').value) || 0;
-            quantity2000 = parseInt(document.getElementById('quantity2000').value) || 0;
-            quantityMixed = parseInt(document.getElementById('quantityMixed').value) || 0;
+    // 获取输入值
+    quantity1000 = parseInt(document.getElementById('quantity1000').value) || 0;
+    quantity2000 = parseInt(document.getElementById('quantity2000').value) || 0;
+    quantityMixed = parseInt(document.getElementById('quantityMixed').value) || 0;
 
-            // 输入验证
-            if (!orderNumber || (quantity1000 + quantity2000 + quantityMixed <= 0)) {
-                alert('请输入有效的订单号和份数！');
-                return;
-            }
+    // 输入验证
+    if (quantity1000 + quantity2000 + quantityMixed <= 0) {
+        alert('请输入有效的份数！');
+        return;
+    }
 
-            // 显示订单号
-            document.getElementById('orderNumberDisplay1000').textContent = orderNumber;
-            document.getElementById('orderNumberDisplay2000').textContent = orderNumber;
+    // 显示订单号（如果有）
+    if (orderNumber) {
+        document.getElementById('orderNumberDisplay1000').textContent = orderNumber;
+        document.getElementById('orderNumberDisplay2000').textContent = orderNumber;
+    }
 
-            // 生成1000粒页面的数据行
-            generateDataRows('dataRows1000', quantity1000 + quantityMixed);
-            // 生成2000粒页面的数据行
-            generateDataRows('dataRows2000', quantity2000);
+    // 生成1000粒页面的数据行
+    generateDataRows('dataRows1000', quantity1000 + quantityMixed);
+    // 生成2000粒页面的数据行
+    generateDataRows('dataRows2000', quantity2000);
 
-            // 显示第二页和悬浮按钮
-            document.getElementById('page1').style.display = 'none';
-            document.getElementById('page2').style.display = 'block';
-            document.getElementById('switchButton').style.display = 'block';
-            document.getElementById('submitButton').style.display = 'block';
-            currentPageType = '1000';
-        }
+    // 显示第二页和悬浮按钮
+    document.getElementById('page1').style.display = 'none';
+    document.getElementById('page2').style.display = 'block';
+    document.getElementById('switchButton').style.display = 'block';
+    document.getElementById('submitButton').style.display = 'block';
+    currentPageType = '1000';
+}
 
         // 生成数据行
         function generateDataRows(containerId, rowsCount) {
@@ -456,7 +458,7 @@
 
                 // 检查是否输入了缺色的色号
                 if (outOfStockColors.includes(maomi) || outOfStockColors.includes(mard)) {
-                    alert(`宝宝，拍下的 ${maomi || mard} 色号缺色，请重新填写！`);
+                    alert(`宝宝，拍下的 ${maomi || mard} 色号缺色请重新填写！`);
                     return null;
                 }
 
@@ -647,4 +649,3 @@ function copyData() {
     </script>
 </body>
 </html>
-
