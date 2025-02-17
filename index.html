@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>拼豆订单信息收集</title>
+    <title>猫咪家拼豆订单信息收集</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -190,7 +190,7 @@
 <body>
     <!-- 第一页：输入订单号和份数 -->
     <div id="page1" class="container">
-        <h1>拼豆订单信息收集</h1>
+        <h1>猫咪家拼豆订单信息收集</h1>
         <label for="orderNumber">订单号：</label>
         <input type="text" id="orderNumber" placeholder="请输入订单号">
         
@@ -313,7 +313,7 @@
         }
 
         // 缺色的色号列表（包括猫咪家色号和 Mard 色号）
-        const outOfStockColors = ["1", "5", "9", "H2", "F5", "C7"];
+        const outOfStockColors = ["51", "75",  "T1", "C3"];
 
         let orderNumber = '';
         let quantity1000 = 0;
@@ -458,7 +458,7 @@
 
                 // 检查是否输入了缺色的色号
                 if (outOfStockColors.includes(maomi) || outOfStockColors.includes(mard)) {
-                    alert(`宝宝，拍下的 ${maomi || mard} 色号缺色，请修改或删除！`);
+                    alert(`宝宝，拍下的 ${maomi || mard} 色号缺色，请重新填写！`);
                     return null;
                 }
 
