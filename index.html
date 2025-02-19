@@ -2,650 +2,133 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>猫咪家拼豆订单信息收集</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>色号转换表</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            position: relative;
-        }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-        input[type="number"], input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .note {
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-        }
-        .row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .row input {
-            flex: 1;
-            min-width: 0;
-        }
-        #page2.container, #page3.container {
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        #dataRows1000, #dataRows2000 {
-            max-height: 60vh;
-            overflow-y: auto;
-            margin-bottom: 20px;
-        }
-        /* 悬浮切换按钮样式 */
-        .switch-button {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            z-index: 1000;
-        }
-        .switch-button:hover {
-            background-color: #0056b3;
-        }
-        /* 悬浮提交订单按钮样式 */
-        .submit-button {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            padding: 8px 12px;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            z-index: 1000;
-        }
-        .submit-button:hover {
-            background-color: #218838;
-        }
-        /* 括号中的字样式 */
-        .red-text {
-            color: red;
-        }
-        .yellow-text {
-            color: yellow;
-        }
-        /* 提示文字样式 */
-        .reminder {
-            font-size: 12px;
-            color: #666;
-            margin: 10px 0;
-        }
-        /* 缺色提醒样式 */
-        .out-of-stock-reminder {
-            font-size: 14px;
-            color: red;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        /* 数据展示页面样式 */
-        #dataDisplayPage {
-            display: none;
-            text-align: center;
-        }
-        #dataDisplayPage h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        #dataDisplayPage pre {
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-radius: 4px;
-            text-align: left;
-            max-height: 50vh;
-            overflow-y: auto;
-            font-size: 14px;
-        }
-        #copyDataButton {
-            margin-top: 20px;
-            padding: 8px 12px;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        #copyDataButton:hover {
-            background-color: #218838;
-        }
-        /* 表格对齐样式 */
-        .table-container {
-            margin-bottom: 20px;
-        }
-        .table-container pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        .table-container table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
-        .table-container th, .table-container td {
+        th, td {
+            border: 1px solid #000;
             padding: 8px;
-            border: 1px solid #ddd;
             text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input[type="number"] {
+            width: 60px;
+        }
+        select {
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <!-- 第一页：输入份数 -->
-    <div id="page1" class="container">
-        <h1>猫咪家拼豆订单信息收集</h1>
-   
-        
-        <label for="quantity1000">1000粒份数：</label>
-        <input type="number" id="quantity1000" placeholder="请输入1000粒份数" min="0">
-        
-        <label for="quantity2000">2000粒份数：</label>
-        <input type="number" id="quantity2000" placeholder="请输入2000粒份数" min="0">
-        
-        <label for="quantityMixed">混豆份数：</label>
-        <input type="number" id="quantityMixed" placeholder="请输入混豆份数" min="0">
-        
-        <p class="note">注：如未下单其他规格可不填。</p>
-        <button onclick="goToPage2()">确认</button>
-    </div>
+    <h1>色号转换表</h1>
+    <label for="brand-select">选择品牌：</label>
+    <select id="brand-select">
+        <option value="猫咪家">猫咪家</option>
+        <option value="mard">mard</option>
+        <option value="咪小窝">咪小窝</option>
+        <option value="小舞">小舞</option>
+        <option value="漫漫">漫漫</option>
+        <option value="盼盼">盼盼</option>
+        <option value="黄豆豆">黄豆豆</option>
+        <option value="COCO">COCO</option>
+        <option value="卡卡">卡卡</option>
+    </select>
 
-    <!-- 第二页：1000粒为一份的填写页面 -->
-    <div id="page2" class="container" style="display: none;">
-        <h1>填写订单信息 <span class="red-text">（1000粒为一份）</span></h1>
-        <p>请输入您需要的色号及数量</p>
-        <p class="reminder">点击左上角可切换至2000粒为一份，确保填写完毕后点击右上角提交。</p>
-        <p class="out-of-stock-reminder">当前 <span class="red-text">51 (T1)</span>、<span class="red-text">75 (C3)</span> 色号缺色，请不要填写！</p>
-        <p>订单号：<span id="orderNumberDisplay1000"></span></p>
-        <div id="dataRows1000"></div>
-    </div>
-
-    <!-- 第三页：2000粒为一份的填写页面 -->
-    <div id="page3" class="container" style="display: none;">
-        <h1>填写订单信息 <span class="yellow-text">（2000粒为一份）</span></h1>
-        <p>请输入您需要的色号及数量</p>
-        <p class="reminder">点击左上角可切换至1000粒为一份，确保填写完毕后点击右上角提交。</p>
-        <p class="out-of-stock-reminder">当前 <span class="red-text">51 (T1)</span>、<span class="red-text">75 (C3)</span> 色号缺色，请不要填写！</p>
-        <p>订单号：<span id="orderNumberDisplay2000"></span></p>
-        <div id="dataRows2000"></div>
-    </div>
-
-    <!-- 数据展示页面 -->
-    <div id="dataDisplayPage" class="container">
-        <h1>订单信息汇总</h1>
-        <div class="table-container">
-            <h2>1000粒/份</h2>
-            <table id="table1000">
-                <thead>
-                    <tr>
-                        <th>猫咪家色号</th>
-                        <th>Mard 色号</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <div class="table-container">
-            <h2>2000粒/份</h2>
-            <table id="table2000">
-                <thead>
-                    <tr>
-                        <th>猫咪家色号</th>
-                        <th>Mard 色号</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <div class="table-container">
-            <h2>整合表格</h2>
-            <table id="tableMerged">
-                <thead>
-                    <tr>
-                        <th>猫咪家色号</th>
-                        <th>Mard 色号</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <button id="copyDataButton" onclick="copyData()">复制所有表格</button>
-        <button onclick="prevPage('page2')">返回修改</button>
-    </div>
-
-    <!-- 悬浮切换按钮 -->
-    <button id="switchButton" class="switch-button" style="display: none;" onclick="switchPage()">切换</button>
-
-    <!-- 悬浮提交订单按钮 -->
-    <button id="submitButton" class="submit-button" style="display: none;" onclick="submitOrder()">提交</button>
+    <table id="color-table">
+        <thead>
+            <tr>
+                <th>猫咪家</th>
+                <th>mard</th>
+                <th id="selected-brand-header"></th>
+                <th id="quantity-header">数量</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 数据行将通过JavaScript动态生成 -->
+        </tbody>
+    </table>
 
     <script>
-        // 定义完整的色号转换表（示例部分）
-        const colorMap = {
-          "1": "H2", "2": "A2", "3": "A4", "4": "A7", "5": "F5", "6": "E4", "7": "D7", "8": "D3", "9": "C7", "10": "B8",
-            "11": "B6", "12": "G8", "13": "H3", "14": "H7", "15": "H1", "16": "F6", "17": "G7", "18": "E1", "19": "G4", "20": "E6",
-            "25": "C6", "26": "B3", "27": "D6", "28": "A3", "29": "A6", "30": "C2", "31": "F2", "32": "D5", "33": "B2", "34": "C5",
-            "35": "F1", "36": "D2", "38": "E2", "39": "B5", "40": "E5", "41": "E7", "42": "C9", "43": "G5", "44": "B7", "45": "H5",
-            "46": "D1", "47": "F7", "48": "B1", "49": "G2", "50": "G6", "51": "T1", "62": "P1", "70": "H6", "71": "C8", "72": "F3",
-            "73": "F4", "74": "E3", "75": "C3", "76": "C1", "77": "A1", "78": "B4", "79": "A5", "80": "D4", "81": "G1", "82": "C4",
-            "83": "H4", "84": "B9", "85": "G3", "86": "H8", "87": "H9", "88": "H10", "89": "D8", "90": "D9", "91": "D10", "92": "F8",
-            "93": "F9", "94": "E10", "95": "E9", "96": "A10", "97": "A9", "98": "A8", "99": "B11", "100": "B10", "101": "G10", "102": "G9",
-            "103": "E8", "104": "D11", "105": "D12", "106": "D13", "107": "D14", "108": "D15", "109": "A11", "110": "A12", "111": "B12", "112": "E12",
-            "113": "C11", "114": "G13", "115": "F10", "116": "A13", "117": "B14", "118": "G11", "119": "B13", "120": "C12", "121": "H11", "122": "B15",
-            "123": "G14", "124": "E13", "125": "D18", "126": "D16", "127": "G12", "128": "D17", "129": "F11", "130": "C10", "131": "E11", "132": "C15",
-            "133": "B16", "134": "F12", "135": "A14", "136": "C14", "137": "G17", "138": "G16", "139": "E15", "140": "E14", "141": "B17", "142": "C13",
-            "143": "G15", "144": "H12", "145": "H14", "146": "H13", "147": "B18", "148": "F13", "149": "C16", "150": "A15", "151": "R11", "152": "R13",
-            "153": "D19", "154": "F14", "155": "D20", "156": "C17", "157": "R12", "158": "D21", "159": "M5", "160": "M13", "161": "M11", "162": "M8",
-            "163": "M15", "164": "M10", "165": "M14", "166": "M3", "167": "M4", "168": "M1", "169": "M6", "170": "M9", "171": "M7", "172": "M12",
-            "173": "M12", "174": "B19", "175": "B20", "176": "P13", "177": "P18", "178": "P9", "179": "P17", "180": "P20", "181": "P23", "182": "P16",
-            "183": "P14", "184": "P15", "185": "P11", "186": "P19", "187": "P10", "188": "P21", "189": "P22", "190": "P12", "191": "F15", "192": "B23",
-            "193": "B22", "194": "B21", "195": "G19", "196": "C18", "197": "C20", "198": "D22", "199": "G20", "200": "H16", "201": "H15", "202": "C19",
-            "203": "G18", "204": "H18", "205": "E17", "206": "E16", "207": "B24", "208": "A18", "209": "H19", "210": "E18", "211": "F16", "212": "C21",
-            "213": "A17", "214": "H17", "215": "E19", "216": "A16", "217": "D23", "218": "A19", "234": "D25", "235": "E23", "236": "H20", "237": "E22",
-            "238": "E21", "239": "C22", "240": "B25", "241": "E20", "242": "A20", "243": "F19", "244": "D24", "245": "F17", "246": "F18", "247": "G21",
-            "248": "B26", "249": "F23", "250": "C26", "251": "F21", "252": "C24", "253": "B29", "254": "B28", "255": "A22", "256": "C25", "257": "F22",
-            "258": "D26", "259": "A23", "260": "F20", "261": "A21", "262": "B27", "263": "C23", "264": "C27", "265": "C28", "266": "C29", "267": "E24",
-            "268": "F24", "269": "F25", "270": "B30", "271": "B31", "272": "B32", "273": "A24", "274": "A25", "275": "A26", "276": "H21", "277": "H22",
-            "278": "H23"
-        };
+        const data = [
+            { 猫咪家: '1', mard: 'H2', 咪小窝: '1', 小舞: 'H2', 漫漫: 'F2', 盼盼: '1', 黄豆豆: 'H2', COCO: 'A1', 卡卡: 'B2', 数量: '' },
+            { 猫咪家: '2', mard: 'A2', 咪小窝: '2', 小舞: 'A2', 漫漫: 'B1', 盼盼: '2', 黄豆豆: 'A2', COCO: 'E1', 卡卡: 'B108', 数量: '' },
+            // 添加更多数据行...
+        ];
 
-        // 创建反向映射表
-        const reverseColorMap = {};
-        for (const [key, value] of Object.entries(colorMap)) {
-            reverseColorMap[value] = key;
-        }
+        const brandSelect = document.getElementById('brand-select');
+        const selectedBrandHeader = document.getElementById('selected-brand-header');
+        const quantityHeader = document.getElementById('quantity-header');
+        const tableBody = document.querySelector('#color-table tbody');
 
-        // 缺色的色号列表（包括猫咪家色号和 Mard 色号）
-        const outOfStockColors = ["51", "75","T1", "C3"];
+        function renderTable(selectedBrand) {
+            tableBody.innerHTML = '';
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                const td1 = document.createElement('td');
+                td1.textContent = row['猫咪家'];
+                tr.appendChild(td1);
 
-        let orderNumber = '';
-        let quantity1000 = 0;
-        let quantity2000 = 0;
-        let quantityMixed = 0;
-        let currentPageType = '1000'; // 当前页面类型：1000或2000
+                const td2 = document.createElement('td');
+                td2.textContent = row['mard'];
+                tr.appendChild(td2);
 
-        // 切换页面
-        function goToPage2() {
-    // 获取输入值
-    quantity1000 = parseInt(document.getElementById('quantity1000').value) || 0;
-    quantity2000 = parseInt(document.getElementById('quantity2000').value) || 0;
-    quantityMixed = parseInt(document.getElementById('quantityMixed').value) || 0;
-
-    // 输入验证
-    if (quantity1000 + quantity2000 + quantityMixed <= 0) {
-        alert('请输入有效的份数！');
-        return;
-    }
-
-    // 显示订单号（如果有）
-    if (orderNumber) {
-        document.getElementById('orderNumberDisplay1000').textContent = orderNumber;
-        document.getElementById('orderNumberDisplay2000').textContent = orderNumber;
-    }
-
-    // 生成1000粒页面的数据行
-    generateDataRows('dataRows1000', quantity1000 + quantityMixed);
-    // 生成2000粒页面的数据行
-    generateDataRows('dataRows2000', quantity2000);
-
-    // 显示第二页和悬浮按钮
-    document.getElementById('page1').style.display = 'none';
-    document.getElementById('page2').style.display = 'block';
-    document.getElementById('switchButton').style.display = 'block';
-    document.getElementById('submitButton').style.display = 'block';
-    currentPageType = '1000';
-}
-
-        // 生成数据行
-        function generateDataRows(containerId, rowsCount) {
-            const dataRows = document.getElementById(containerId);
-            dataRows.innerHTML = '';
-            for (let i = 1; i <= rowsCount; i++) {
-                const row = document.createElement('div');
-                row.className = 'row';
-                row.innerHTML = `
-                    <input type="text" class="maomi" placeholder="猫咪家色号" oninput="syncColor(this, true)" onblur="checkOutOfStock(this)">
-                    <input type="text" class="mard" placeholder="Mard 色号" oninput="syncColor(this, false)" onblur="checkOutOfStock(this)">
-                    <input type="number" class="quantity" placeholder="数量" min="0">
-                `;
-                dataRows.appendChild(row);
-            }
-        }
-
-        // 同步色号（双向）
-        function syncColor(input, isMaomi) {
-            const value = input.value;
-            const row = input.parentElement;
-            const maomiInput = row.querySelector('.maomi');
-            const mardInput = row.querySelector('.mard');
-
-            if (isMaomi) {
-                // 填写猫咪家色号，自动填充 Mard 色号
-                mardInput.value = colorMap[value] || '';
-            } else {
-                // 填写 Mard 色号，自动填充猫咪家色号
-                maomiInput.value = reverseColorMap[value] || '';
-            }
-        }
-
-        // 检查是否输入了缺色的色号
-        function checkOutOfStock(input) {
-            const value = input.value;
-            if (outOfStockColors.includes(value)) {
-                alert('此色号缺货，请修改或删除！');
-                // 清空输入框
-                input.value = '';
-                // 同步清空关联的色号
-                const row = input.parentElement;
-                const maomiInput = row.querySelector('.maomi');
-                const mardInput = row.querySelector('.mard');
-                if (input === maomiInput) {
-                    mardInput.value = '';
-                } else if (input === mardInput) {
-                    maomiInput.value = '';
-                }
-            }
-        }
-
-        // 切换页面
-        function switchPage() {
-            const page2 = document.getElementById('page2');
-            const page3 = document.getElementById('page3');
-
-            if (page2.style.display === 'block') {
-                page2.style.display = 'none';
-                page3.style.display = 'block';
-                currentPageType = '2000';
-            } else {
-                page3.style.display = 'none';
-                page2.style.display = 'block';
-                currentPageType = '1000';
-            }
-        }
-
-        // 提交订单
-        function submitOrder() {
-            const confirmSubmit = confirm('确认提交？');
-            if (!confirmSubmit) return;
-
-            // 检查两页的数据
-            const page1000Data = checkPageData('dataRows1000', quantity1000 + quantityMixed, '1000粒为一份');
-            const page2000Data = checkPageData('dataRows2000', quantity2000, '2000粒为一份');
-
-            // 如果有错误，直接返回
-            if (!page1000Data || !page2000Data) return;
-
-            // 显示数据
-            displayData(page1000Data, page2000Data);
-        }
-
-        // 检查页面数据
-        function checkPageData(containerId, expectedRows, pageType) {
-            const rows = document.querySelectorAll(`#${containerId} .row`);
-            const orderData = [];
-            let totalFilledQuantity = 0;
-
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                const maomi = row.querySelector('.maomi').value;
-                const mard = row.querySelector('.mard').value;
-                const quantity = parseInt(row.querySelector('.quantity').value) || 0;
-
-                // 检查是否全填或全不填
-                const isAllFilled = maomi && mard && quantity > 0;
-                const isAllEmpty = !maomi && !mard && quantity === 0;
-
-                if (!isAllFilled && !isAllEmpty) {
-                    alert(`宝宝，第 ${i + 1} 行数据没有完整填写，请检查一下哦！`);
-                    return null;
-                }
-
-                // 检查是否输入了缺色的色号
-                if (outOfStockColors.includes(maomi) || outOfStockColors.includes(mard)) {
-                    alert(`宝宝，拍下的 ${maomi || mard} 色号缺色请重新填写！`);
-                    return null;
-                }
-
-                // 如果该行有数据，则记录
-                if (isAllFilled) {
-                    orderData.push({
-                        猫咪家色号: maomi,
-                        Mard色号: mard,
-                        数量: quantity
+                if (selectedBrand === '猫咪家' || selectedBrand === 'mard') {
+                    // 当选择“猫咪家”或“mard”时，第三列显示“数量”
+                    const td3 = document.createElement('td');
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.value = row['数量'];
+                    input.addEventListener('input', (e) => {
+                        row['数量'] = e.target.value;
                     });
-                    totalFilledQuantity += quantity;
+                    td3.appendChild(input);
+                    tr.appendChild(td3);
+                } else {
+                    // 当选择其他品牌时，第三列显示品牌色号，第四列显示“数量”
+                    const td3 = document.createElement('td');
+                    td3.textContent = row[selectedBrand];
+                    tr.appendChild(td3);
+
+                    const td4 = document.createElement('td');
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.value = row['数量'];
+                    input.addEventListener('input', (e) => {
+                        row['数量'] = e.target.value;
+                    });
+                    td4.appendChild(input);
+                    tr.appendChild(td4);
                 }
-            }
 
-            // 检查总数量是否匹配
-            if (totalFilledQuantity !== expectedRows) {
-                alert(`宝宝，您在首页填写的${pageType}中填写的是 ${expectedRows}，而在页面中填写的是 ${totalFilledQuantity}，请重新检查。`);
-                return null;
-            }
-
-            return orderData;
-        }
-
-        // 显示数据
-        function displayData(page1000Data, page2000Data) {
-            // 显示1000粒表格
-            renderTable('table1000', page1000Data);
-
-            // 显示2000粒表格
-            renderTable('table2000', page2000Data);
-
-            // 整合数据并显示整合表格
-const mergedData = mergeTables(page1000Data, page2000Data);
-renderMergedTable('tableMerged', mergedData);
-
-// 显示数据展示页面
-document.getElementById('page2').style.display = 'none';
-document.getElementById('page3').style.display = 'none';
-document.getElementById('dataDisplayPage').style.display = 'block';
-}
-
-// 渲染表格（用于1000粒和2000粒表格）
-function renderTable(tableId, data) {
-    const tableBody = document.querySelector(`#${tableId} tbody`);
-    tableBody.innerHTML = '';
-    data.forEach(item => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${item.猫咪家色号}</td>
-            <td>${item.Mard色号}</td>
-            <td>${item.数量}</td>
-        `;
-        tableBody.appendChild(row);
-    });
-
-    // 确保表头包含数量列
-    const tableHead = document.querySelector(`#${tableId} thead`);
-    if (!tableHead.querySelector('th:nth-child(3)')) {
-        const th = document.createElement('th');
-        th.textContent = '数量';
-        tableHead.querySelector('tr').appendChild(th);
-    }
-}
-
-// 渲染整合表格
-function renderMergedTable(tableId, data) {
-    const tableBody = document.querySelector(`#${tableId} tbody`);
-    tableBody.innerHTML = ''; // 清空表格内容
-
-    // 以猫咪家色号为基准升序排序
-    data.sort((a, b) => parseInt(a.猫咪家色号) - parseInt(b.猫咪家色号));
-
-    data.forEach(item => {
-        let maomiText = item.猫咪家色号; // 默认显示猫咪家色号
-
-        // 处理猫咪家色号显示逻辑
-        if (["1", "14", "15"].includes(item.猫咪家色号)) {
-            // 猫咪家色号为1、14、15时，数量为2及以上显示为x*y
-            if (item.数量 >= 2) {
-                maomiText = `${item.猫咪家色号}*${item.数量}`;
-            }
-        } else {
-            // 其他猫咪家色号
-            if (item.数量 === 2) {
-                // 数量为2时复制一行
-                for (let i = 0; i < 2; i++) {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${maomiText}</td>
-                        <td>${item.Mard色号}</td>
-                    `;
-                    tableBody.appendChild(row);
-                }
-                return; // 跳过后续处理
-            } else if (item.数量 >= 3) {
-                // 数量为3及以上时显示为x*y
-                maomiText = `${item.猫咪家色号}*${item.数量}`;
-            }
-        }
-
-        // 添加行
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${maomiText}</td>
-            <td>${item.Mard色号}</td>
-        `;
-        tableBody.appendChild(row);
-    });
-
-    // 添加混豆数量到表格最下面
-    if (quantityMixed > 0) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td></td>
-            <td>混豆 *${quantityMixed}</td>
-        `;
-        tableBody.appendChild(row);
-    }
-
-    // 确保表头不包含数量列
-    const tableHead = document.querySelector(`#${tableId} thead`);
-    const thCount = tableHead.querySelectorAll('th').length;
-    if (thCount > 2) {
-        tableHead.querySelector('th:nth-child(3)').remove();
-    }
-}
-
-// 合并表格数据
-function mergeTables(page1000Data, page2000Data) {
-    const mergedMap = new Map();
-
-    // 处理1000粒数据
-    page1000Data.forEach(item => {
-        const key = `${item.猫咪家色号}-${item.Mard色号}`;
-        mergedMap.set(key, {
-            猫咪家色号: item.猫咪家色号,
-            Mard色号: item.Mard色号,
-            数量: item.数量
-        });
-    });
-
-    // 处理2000粒数据
-    page2000Data.forEach(item => {
-        const key = `${item.猫咪家色号}-${item.Mard色号}`;
-        const existingItem = mergedMap.get(key);
-        if (existingItem) {
-            existingItem.数量 += item.数量 * 2; // 2000粒数据数量×2
-        } else {
-            mergedMap.set(key, {
-                猫咪家色号: item.猫咪家色号,
-                Mard色号: item.Mard色号,
-                数量: item.数量 * 2 // 2000粒数据数量×2
+                tableBody.appendChild(tr);
             });
         }
-    });
 
-    // 转换为数组
-    const mergedData = [];
-    mergedMap.forEach(item => {
-        mergedData.push(item);
-    });
+        function updateTableHeaders(selectedBrand) {
+            if (selectedBrand === '猫咪家' || selectedBrand === 'mard') {
+                selectedBrandHeader.textContent = '数量';
+                quantityHeader.style.display = 'none'; // 隐藏第四列表头
+            } else {
+                selectedBrandHeader.textContent = selectedBrand;
+                quantityHeader.style.display = ''; // 显示第四列表头
+            }
+        }
 
-    return mergedData;
-}
+        brandSelect.addEventListener('change', (e) => {
+            const selectedBrand = e.target.value;
+            updateTableHeaders(selectedBrand);
+            renderTable(selectedBrand);
+        });
 
-// 复制所有表格
-function copyData() {
-    const table1000 = document.getElementById('table1000').outerHTML;
-    const table2000 = document.getElementById('table2000').outerHTML;
-    const tableMerged = document.getElementById('tableMerged').outerHTML;
-
-    // 拼接所有表格
-    const combinedTables = `
-        <h2>1000粒表格</h2>
-        ${table1000}
-        <h2>2000粒表格</h2>
-        ${table2000}
-        <h2>合并表格</h2>
-        ${tableMerged}
-    `;
-
-    // 复制到剪贴板
-    navigator.clipboard.writeText(combinedTables)
-        .then(() => alert('表格已复制到剪贴板！'))
-        .catch(() => alert('复制失败，请手动复制！'));
-}
-
+        // 初始渲染
+        updateTableHeaders(brandSelect.value);
+        renderTable(brandSelect.value);
     </script>
 </body>
 </html>
